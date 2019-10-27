@@ -1,3 +1,5 @@
+import traceback
+
 from lxml import etree
 from newspaper import Article
 
@@ -28,9 +30,9 @@ class govementNewsGatherer:
     def process(self):
         while True:
             spider_log.debug(f"source_queue:{source_queue.qsize()}")
-            source_url = source_queue.get(timeout=3)
+            source_url = source_queue.get()
             try:
                 self.get_article_from_source_url(source_url)
             except Exception as e:
-                spider_log.error(f"get article source failed:{e}")
+                spider_log.error(f"get article source failed:{traceback.format_exc()}")
 
