@@ -5,7 +5,7 @@ from newspaper import Article
 from lxml import etree
 
 from dataCenter import article_queue, data_queue
-from utils import spider_log
+from logger import spider_log
 
 
 class articleDownLoader:
@@ -27,8 +27,8 @@ class articleDownLoader:
             if (len(title_element)>0 and len(content_element)>0):
                 news["title"] = title_element[0].text.strip()
                 news["content"] = etree.tostring(content_element[0]).decode('utf-8')
-                news["publish_time"] = publish_time_element[0].text.strip() if len(publish_time_element) > 0 else ""
-                news["publisher"] = publisher_element[0].text.strip() if len(publisher_element) > 0 else ""
+                news["publish_time"] = publish_time_element[0].text.strip() if len(publish_time_element) > 0  and publish_time_element[0].text else ""
+                news["publisher"] = publisher_element[0].text.strip() if len(publisher_element) > 0 and publisher_element[0].text else ""
                 spider_log.debug(f"article downloaded: {news['title']}")
                 data_queue.put(news)
 

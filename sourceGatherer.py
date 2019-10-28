@@ -4,7 +4,7 @@ from lxml import etree
 from newspaper import Article
 
 from dataCenter import article_queue, source_queue
-from utils import spider_log
+from logger import spider_log
 
 
 class govementNewsGatherer:

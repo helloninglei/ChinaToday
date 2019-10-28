@@ -1,1 +1,1 @@
-ES_ENDPOINT = "http://localhost:9200"
+ES_ENDPOINT = "http://elasticsearch:9200"

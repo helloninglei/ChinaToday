@@ -1,0 +1,52 @@
+version: "3"
+
+services:
+  chinatoday:
+    image: wfarn86/python3.8-requests
+    build:
+      context: .
+      dockerfile: docker/chinatoday.dockerfile
+    restart: unless-stopped
+    tty: true
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "20"
+    volumes:
+      - .:/workspace
+    command: bash -c 'cd /workspace && pm2 start /workspace/start.sh && pm2 logs'
+    ports:
+      - 8000:8000
+
+  elasticsearch:
+    image: elasticsearch
+    restart: unless-stopped
+    environment:
+      discovery.type: single-node
+    ports:
+      - 9200:9200
+      - 9300:9300
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "20"
+
+  nginx:
+    image: nginx
+    restart: unless-stopped
+    ports:
+      - 80:80
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "10"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    command: [nginx, '-g', 'daemon off;']
+
+
+
+

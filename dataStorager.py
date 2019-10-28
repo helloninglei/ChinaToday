@@ -3,7 +3,7 @@ import traceback
 import requests
 
 from dataCenter import data_queue
-from utils import spider_log
+from logger import spider_log
 
 
 class Storager:
