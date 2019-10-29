@@ -45,6 +45,7 @@ services:
         max-file: "10"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./web/build:/var/www/chinatoday
     command: [nginx, '-g', 'daemon off;']
 
 
