@@ -1,1 +1,0 @@
-export const EL_ENDPOINT = "http://elasticsearch";

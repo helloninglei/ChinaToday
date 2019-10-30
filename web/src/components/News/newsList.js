@@ -11,8 +11,7 @@ function NewsList() {
     useEffect(() => {
         axios({
             method: 'get',
-            url: EL_ENDPOINT + '/article/govementNews/_search',
-            responseType: 'json',
+            url: '/elasticsearch/article/govementNews/_search',
             data: {
                 "query": { "match_all": {} },
                 "_source": ["title", "publish_time", 'publisher', 'content']
