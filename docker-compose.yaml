@@ -1,5 +1,10 @@
 version: "3"
 
+networks:
+  default:
+    driver_opts:
+      com.docker.network.bridge.name: "default0"
+
 services:
   chinatoday:
     image: wfarn86/python3.8-requests
@@ -8,6 +13,8 @@ services:
       dockerfile: docker/chinatoday.dockerfile
     restart: unless-stopped
     tty: true
+    depends_on:
+      - elasticsearch
     logging:
       driver: "json-file"
       options:
