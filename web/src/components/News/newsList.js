@@ -2,18 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { Table } from 'reactstrap';
 import { List } from "immutable";
-import {EL_ENDPOINT} from '../../config'
+import MyPagenation from "../pagination"
+import { EL_ENDPOINT } from '../../config'
+import { UPDATE_TOTAL_COUNT } from '../../reducers/actionTypes'
 const axios = require('axios');
 
 function NewsList() {
 
     const {pageNumber, pageSize} = useSelector(state=>({
         pageNumber: state.data.get('pageNumber'),
-        pageSize: state.data.get('pageSize')
+        pageSize: state.data.get('pageSize'),
     }));
 
+    const dispatch = useDispatch();
+
     const [newsList, setNewsList] = useState(List());
-    const [totalCount, setTotalCount] = useState(0);
 
     useEffect(() => {
         axios({
@@ -26,9 +29,8 @@ function NewsList() {
             }
         })
             .then(function (response) {
-                console.log(response.data.hits.hits);
-                setTotalCount(response.data.hits.total);
-                setNewsList(response.data.hits.hits)
+                setNewsList(response.data.hits.hits);
+                dispatch({type:UPDATE_TOTAL_COUNT, payload: response.data.hits.total})
             });
     });
     
@@ -50,19 +52,22 @@ function NewsList() {
     
 
     return (
-        <Table>
-            <thead>
-            <tr>
-                <th>#</th>
-                <th>Title</th>
-                <th>PublishTime</th>
-                <th>Publisher</th>
-            </tr>
-            </thead>
-            <tbody>
-            {displayTableRows()}
-            </tbody>
-        </Table>
+        <div>
+            <Table>
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>PublishTime</th>
+                    <th>Publisher</th>
+                </tr>
+                </thead>
+                <tbody>
+                {displayTableRows()}
+                </tbody>
+            </Table>
+            <MyPagenation />
+        </div>
     );
 }
 
