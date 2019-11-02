@@ -1,39 +1,39 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from "react-redux";
+import React, {useEffect, useCallback} from 'react';
+import { useMappedState, useDispatch } from "redux-react-hook";
 import { Table } from 'reactstrap';
-import { List } from "immutable";
-import MyPagenation from "../pagination"
 import { EL_ENDPOINT } from '../../config'
-import { UPDATE_TOTAL_COUNT } from '../../reducers/actionTypes'
+import { UPDATE_TOTAL_COUNT, UPDATE_NEWS_LIST } from '../../reducers/actionTypes'
 const axios = require('axios');
 
-function NewsList() {
 
-    const {pageNumber, pageSize} = useSelector(state=>({
-        pageNumber: state.data.get('pageNumber'),
+
+function NewsList() {
+    const mapState = useCallback(state => ({
+        newsList: state.data.get('newsList'),
         pageSize: state.data.get('pageSize'),
+        pageNumber: state.data.get('pageNumber')
     }));
 
     const dispatch = useDispatch();
 
-    const [newsList, setNewsList] = useState(List());
+    const { newsList, pageSize,  pageNumber} = useMappedState(mapState);
 
     useEffect(() => {
         axios({
             method: 'get',
-            url: '/elasticsearch/article/govementNews/_search?from=' + `${pageNumber}` + '&size=' + `${pageSize}`,
+            url: '/elasticsearch/article/govementNews/_search?from=' + `${pageNumber * pageSize}` + '&size=' + `${pageSize}`,
             data: {
                 "query": { "match_all": {} },
                 "_source": ["title", "publish_time", 'publisher', 'content'],
 
             }
-        })
-            .then(function (response) {
-                setNewsList(response.data.hits.hits);
+        }).then(function (response) {
+                console.log(response.data.hits.total);
+                dispatch({type:UPDATE_NEWS_LIST, payload: response.data.hits.hits})
                 dispatch({type:UPDATE_TOTAL_COUNT, payload: response.data.hits.total})
             });
-    });
-    
+    },[]);
+
     function displayTableRows() {
         return (
             newsList.map((newsItem, index)=>(
@@ -48,8 +48,6 @@ function NewsList() {
             )
         )
     }
-
-    
 
     return (
         <div>
@@ -66,7 +64,6 @@ function NewsList() {
                 {displayTableRows()}
                 </tbody>
             </Table>
-            <MyPagenation />
         </div>
     );
 }
