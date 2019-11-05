@@ -19,14 +19,13 @@ function MyPagenation() {
 
     function getPageItems() {
         const totalPage = Math.floor(totalCount/pageSize);
-        const minPage = Math.max(0, pageNumber);
-        const maxPage = Math.min(totalPage, pageNumber+10);
-        console.log(totalPage, minPage, maxPage)
+        const minPage = Math.max(0, pageNumber-5);
+        const maxPage = Math.min(totalPage, minPage+10);
         return (
             Array(maxPage-minPage).fill(0).map((page, index)=>(
                 <PaginationItem>
                     <PaginationLink href="#" onClick={()=>{setPage(minPage+ index)}}>
-                        {minPage+index}
+                        {minPage+index+1}
                     </PaginationLink>
                 </PaginationItem>
             ))
@@ -51,7 +50,10 @@ function MyPagenation() {
     }
 
     return (
-        <Pagination aria-label="Page navigation example">
+        <Pagination
+            aria-label="Page navigation example"
+            style={{ "align-items": "center", "justify-content": "center", "margin-bottom": "10px" }}
+        >
             <PaginationItem>
                 <PaginationLink first href="#" onClick={()=>{setPage(0)}} />
             </PaginationItem>

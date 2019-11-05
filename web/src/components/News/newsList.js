@@ -34,10 +34,14 @@ function NewsList() {
             });
     },[]);
 
+    function selectNews(newsItem) {
+      dispatch({type:"UPDATE_SELECTED_NEWS", payload: newsItem._source})
+    };
+
     function displayTableRows() {
         return (
             newsList.map((newsItem, index)=>(
-                <tr>
+                <tr onClick={()=>{selectNews(newsItem)}}>
                     <td>{index+1}</td>
                     <td>{newsItem._source.title}</td>
                     <td>{newsItem._source.publish_time}</td>
