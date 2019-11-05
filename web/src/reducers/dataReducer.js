@@ -3,7 +3,8 @@ import {
     UPDATE_NEWS_LIST,
     UPDATE_TOTAL_COUNT,
     UPDATE_PAGE_NUMBER,
-    UPDATE_SELECTED_NEWS
+    UPDATE_SELECTED_NEWS,
+    DISPLAY_NEWS_DETAIL
 } from "./actionTypes";
 
 const initialState = Map({
@@ -11,7 +12,8 @@ const initialState = Map({
     pageNumber: 1,
     pageSize: 10,
     totalCount: 0,
-    selectedNews: {}
+    selectedNews: {},
+    showNewsDetail: false
 });
 
 const dataReducer = (state = initialState, action) => {
@@ -23,8 +25,9 @@ const dataReducer = (state = initialState, action) => {
         case UPDATE_PAGE_NUMBER:
             return state.set("pageNumber", action.payload);
         case UPDATE_SELECTED_NEWS:
-            console.log("UPDATE_SELECTED_NEWS:", action.payload);
             return state.set('selectedNews', action.payload);
+        case DISPLAY_NEWS_DETAIL:
+            return state.set("showNewsDetail", action.payload);
         default:
             return state;
 

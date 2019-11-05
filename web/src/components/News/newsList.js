@@ -35,7 +35,8 @@ function NewsList() {
     },[]);
 
     function selectNews(newsItem) {
-      dispatch({type:"UPDATE_SELECTED_NEWS", payload: newsItem._source})
+      dispatch({type:"UPDATE_SELECTED_NEWS", payload: newsItem._source});
+      dispatch({type:"DISPLAY_NEWS_DETAIL", payload:true})
     };
 
     function displayTableRows() {
@@ -43,9 +44,12 @@ function NewsList() {
             newsList.map((newsItem, index)=>(
                 <tr onClick={()=>{selectNews(newsItem)}}>
                     <td>{index+1}</td>
-                    <td>{newsItem._source.title}</td>
-                    <td>{newsItem._source.publish_time}</td>
-                    <td>{newsItem._source.publisher}</td>
+                    <td>{newsItem._source.title}
+                        <div>
+                            <span style={{"font-size": "12px"}}>{newsItem._source.publisher}</span>
+                            <span style={{"font-size": "12px", "margin-left": "10px"}}>{newsItem._source.publish_time}</span>
+                        </div>
+                    </td>
                 </tr>
                 )
 
@@ -60,8 +64,6 @@ function NewsList() {
                 <tr>
                     <th>#</th>
                     <th>Title</th>
-                    <th>PublishTime</th>
-                    <th>Publisher</th>
                 </tr>
                 </thead>
                 <tbody>
