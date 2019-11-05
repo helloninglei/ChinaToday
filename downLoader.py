@@ -1,11 +1,11 @@
 # -*- coding:utf-8 -*-
+import json
 import traceback
 
 from newspaper import Article
 from lxml import etree
-
-from dataCenter import article_queue, data_queue
 from logger import spider_log
+from settings import redis_client, NEWS_BRIEF_QUEUE, NEWS_DETAIL_QUEUE
 
 
 class articleDownLoader:
@@ -30,12 +30,12 @@ class articleDownLoader:
                 news["publish_time"] = publish_time_element[0].text.strip() if len(publish_time_element) > 0  and publish_time_element[0].text else ""
                 news["publisher"] = publisher_element[0].text.strip() if len(publisher_element) > 0 and publisher_element[0].text else ""
                 spider_log.debug(f"article downloaded: {news['title']}")
-                data_queue.put(news)
+                redis_client.lpush(NEWS_DETAIL_QUEUE, json.dumps(news))
 
     def process(self):
         while True:
-            spider_log.debug(f"article_queue:{article_queue.qsize()}")
-            article = article_queue.get()
+            article = json.loads(redis_client.brpop(NEWS_BRIEF_QUEUE)[1])
+            spider_log.info(article)
             try:
                 self.download_article(article['link'])
             except Exception:

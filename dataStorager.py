@@ -1,9 +1,10 @@
+import json
 import traceback
 
 import requests
 
-from dataCenter import data_queue
 from logger import spider_log
+from settings import redis_client, NEWS_DETAIL_QUEUE
 
 
 class Storager:
@@ -23,7 +24,8 @@ class Storager:
 
     def process(self):
         while True:
-            article = data_queue.get()
+            article = json.loads(redis_client.brpop(NEWS_DETAIL_QUEUE)[1])
+            spider_log.info(article)
             try:
                 self.save_to_elasticsearch(article)
             except Exception:
