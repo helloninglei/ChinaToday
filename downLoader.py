@@ -35,7 +35,6 @@ class articleDownLoader:
     def process(self):
         while True:
             article = json.loads(redis_client.brpop(NEWS_BRIEF_QUEUE)[1])
-            spider_log.info(article)
             try:
                 self.download_article(article['link'])
             except Exception:

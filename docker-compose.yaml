@@ -40,6 +40,8 @@ services:
       options:
         max-size: "20m"
         max-file: "20"
+    volumes:
+      - es-storage:/usr/share/elasticsearch/data
 
   nginx:
     image: nginx
@@ -66,7 +68,13 @@ services:
       options:
         max-size: "10m"
         max-file: "10"
+    volumes:
+      - redis-storage:/data
 
-
+volumes:
+  redis-storage:
+    driver: local
+  es-storage:
+    driver: local
 
 

@@ -25,7 +25,6 @@ class Storager:
     def process(self):
         while True:
             article = json.loads(redis_client.brpop(NEWS_DETAIL_QUEUE)[1])
-            spider_log.info(article)
             try:
                 self.save_to_elasticsearch(article)
             except Exception:
